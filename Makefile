@@ -1,9 +1,10 @@
-SRCS    =	server.c
+SRCS    =	server.c \
+			client.c
 
 
 OBJ    = ${SRCS:.c=.o}
 INCS    = includes
-NAME    = minitalk
+NAME    = client server
 CC        = gcc
 RM        = rm -rf
 LIBFTDIR	= libft
@@ -15,23 +16,28 @@ CFLAGS    = -Wall -Wextra -Werror -fsanitize=address -g
 .c.o:
 	$(CC) ${CFLAGS} -c $< -o $@
 
-$(NAME): $(OBJ)
+all: client server
+
+server: server.o
+	make -C ${LIBFTDIR}
+	make -C${PRINTFDIR}
+	${CC} ${CFLAGS} -o server server.o printf/printf.a
+
+client: client.o
 	make -C $(LIBFTDIR)
 	make -C${PRINTFDIR}
-	$(CC) $(OBJ) ${CFLAGS} ${LIBFT} ${PRINTF} -o $(NAME)
-
-all: ${NAME}
+	${CC} ${CFLAGS} -o client client.o printf/printf.a libft/libft.a
 
 clean:
-	make clean -C $(LIBFTDIR) 
-	make clean -C${PRINTFDIR}
+	make clean -C ${LIBFTDIR}
+	make clean -C ${PRINTFDIR}
 	${RM} ${OBJ}
 
 fclean: clean
-	make fclean -C $(LIBFTDIR) 
-	make fclean -C${PRINTFDIR}
+	make fclean -C ${LIBFTDIR}
+	make fclean -C ${PRINTFDIR}
 	${RM} ${NAME}
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re client server

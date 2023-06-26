@@ -6,7 +6,7 @@
 /*   By: hubrygo <hubrygo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 10:40:50 by hubrygo           #+#    #+#             */
-/*   Updated: 2023/06/15 17:09:03 by hubrygo          ###   ########.fr       */
+/*   Updated: 2023/06/22 15:52:01 by hubrygo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 #include "libft/libft.h"
 #include "printf/ft_printf.h"
 
-void	btoa(int signal)
+static void	btoa(int signal)
 {
 	static int	bit;
 	static int	c;
+
 	if (SIGUSR1 == signal)
 		c |= (0x01 << bit);
 	bit++;
@@ -30,13 +31,15 @@ void	btoa(int signal)
 	}
 }
 
-int main(void)
+int	main(void)
 {
 	ft_printf("PID: %d\n", getpid());
 	while (1)
 	{
-		signal(SIGUSR1, btoa);
-		signal(SIGUSR2, btoa);
+		if (signal(SIGUSR1, btoa) == SIG_ERR)
+			exit(EXIT_FAILURE);
+		if (signal(SIGUSR2, btoa) == SIG_ERR)
+			exit(EXIT_FAILURE);
 		pause();
 	}
 }

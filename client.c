@@ -6,7 +6,7 @@
 /*   By: hubrygo <hubrygo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 10:46:20 by hubrygo           #+#    #+#             */
-/*   Updated: 2023/06/15 17:13:06 by hubrygo          ###   ########.fr       */
+/*   Updated: 2023/06/22 15:49:09 by hubrygo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,21 @@ static void	send_signal(char c, int pid)
 	while (bit < 8)
 	{
 		if ((c & (0x01 << bit)) != 0)
-			kill(pid, SIGUSR1);
+		{
+			if (kill(pid, SIGUSR1) == -1)
+				exit(EXIT_FAILURE);
+		}
 		else
-			kill(pid, SIGUSR2);
+		{
+			if (kill(pid, SIGUSR2) == -1)
+				exit(EXIT_FAILURE);
+		}
 		usleep(100);
 		bit++;
 	}
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	int	pid;
 	int	i;
@@ -40,7 +46,7 @@ int main(int argc, char **argv)
 	i = 0;
 	if (argc != 3)
 	{
-		ft_printf("Wrong format\n");
+		ft_printf("Wrong imput\n");
 		return (0);
 	}
 	pid = ft_atoi(argv[1]);
